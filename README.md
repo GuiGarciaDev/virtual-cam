@@ -73,7 +73,8 @@ pip install -r requirements.txt
 ### 4. Run the server
 
 ```bash
-python camera_bridge.py
+python camera_bridge.py                # defaults: 1280×720 @ 30 FPS, port 5000
+python camera_bridge.py --help         # see all options
 ```
 
 The script will:
@@ -96,20 +97,25 @@ Once the page loads, your phone camera feed will appear as a regular webcam on W
 
 ## ⚙️ Configuration
 
-All configuration constants are at the top of `camera_bridge.py`:
+All settings can be customised via **command-line arguments**:
 
-| Variable             | Default | Description                       |
-| -------------------- | ------- | --------------------------------- |
-| `VIRTUAL_CAM_WIDTH`  | `1280`  | Virtual camera output width (px)  |
-| `VIRTUAL_CAM_HEIGHT` | `720`   | Virtual camera output height (px) |
-| `VIRTUAL_CAM_FPS`    | `30`    | Target frames per second          |
-| `SERVER_PORT`        | `5000`  | HTTP/HTTPS server port            |
+| Flag         | Default | Description                       |
+| ------------ | ------- | --------------------------------- |
+| `--width W`  | `1280`  | Virtual camera output width (px)  |
+| `--height H` | `720`   | Virtual camera output height (px) |
+| `--fps N`    | `30`    | Target frames per second          |
+| `--port P`   | `5000`  | HTTP/HTTPS server port            |
+| `--no-ssl`   | off     | Disable HTTPS (plain HTTP mode)   |
 
-### CLI Options
+### Examples
 
-| Flag       | Effect                                   |
-| ---------- | ---------------------------------------- |
-| `--no-ssl` | Disable HTTPS and run in plain HTTP mode |
+```bash
+# 1080p at 60 FPS on port 8080
+python camera_bridge.py --width 1920 --height 1080 --fps 60 --port 8080
+
+# 480p, default FPS, no SSL
+python camera_bridge.py --width 854 --height 480 --no-ssl
+```
 
 ---
 
