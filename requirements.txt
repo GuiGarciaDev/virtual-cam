@@ -1,0 +1,7 @@
+flask
+flask-socketio
+pyvirtualcam
+opencv-python
+numpy
+simple-websocket
+cryptography
