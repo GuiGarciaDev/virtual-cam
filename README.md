@@ -13,10 +13,21 @@
 
 ---
 
-<img width="1919" height="1031" alt="image" src="https://github.com/user-attachments/assets/c50ae100-f267-44f3-9623-370ce367ee71" />
-<img width="322" height="700" alt="image" src="https://github.com/user-attachments/assets/7600cac6-d1b6-4400-957a-9c17f95a3500" />
+## What it looks like
 
+<p align="center">
+  <img width="300" alt="The Camera Bridge page on the phone: live preview with LIVE, 1080p and fps labels, plus the flip camera, Stop and Settings buttons" src="https://github.com/user-attachments/assets/7600cac6-d1b6-4400-957a-9c17f95a3500" />
+  <br>
+  <em>On the phone: live preview, flip camera, Start/Stop and ⚙ Settings.</em>
+</p>
 
+<p align="center">
+  <img width="900" alt="The phone video arriving on the PC as OBS Virtual Camera" src="https://github.com/user-attachments/assets/c50ae100-f267-44f3-9623-370ce367ee71" />
+  <br>
+  <em>On the PC: the phone's video arrives as a webcam that any app can use.</em>
+</p>
+
+---
 
 ## What you need
 
@@ -48,13 +59,14 @@ Every time you want to use your phone as a webcam:
 
 1. **Double-click `start.bat`.** A window opens with a **QR code**.
 2. **Scan the QR code** with your phone's camera and open the link in Chrome.
-3. **Allow camera access** on the phone. You'll see a preview and **Connected to PC**.
+3. **Allow camera access** on the phone. You'll see a live preview and **Connected to PC**.
 4. In **Zoom / Teams / Meet / Discord**, choose **OBS Virtual Camera** as your camera.
 5. When you're done, **close the window** on the PC.
 
 **Tips**
 - Keep the Camera Bridge page **open and in front** on the phone during the call. The page keeps the screen on.
-- Use **Flip camera** to switch between the back and front camera.
+- The round button on the left switches between the **back and front camera**.
+- The big button **starts and stops** the camera. While stopped, your meeting shows "Waiting for phone...".
 - **Bookmark the page** on your phone: the link stays the same every time, so next time you can skip the QR code.
 
 ### First time on a phone: the security warning
@@ -62,26 +74,40 @@ Every time you want to use your phone as a webcam:
 The first time, Chrome shows **"Your connection is not private"**. That's expected, because the page runs on your own PC.
 
 - Tap **Advanced → Proceed** to continue.
-- To make the warning go away for good, tap **Remove the certificate warning** at the bottom of the page and follow the steps there (download a small certificate and install it in your phone's settings).
+- To make the warning go away for good, open **Settings (⚙) → Remove the security warning** on the page and follow the steps there (download a small certificate and install it in your phone's settings).
 
 ---
 
-## Settings (optional)
+## Settings
 
-Add options after `start.bat`, for example in a Command Prompt opened in the project folder:
+Tap the **⚙ button** on the phone to change these **while it's running**, no restart needed:
+
+| Setting           | Choices                          | Tip                                              |
+| ----------------- | -------------------------------- | ------------------------------------------------ |
+| **Resolution**    | 480p · 720p · 1080p              | 720p is a good default for meetings              |
+| **Frame rate**    | 15 · 24 · 30 fps                 | Lower it if the Wi-Fi is slow                    |
+| **Image quality** | 40% – 95%                        | Lower it if the picture stutters                 |
+| **Framing**       | Fit (whole picture) · Fill (crop) | Matters when the phone is held upright          |
+
+Changes apply right away and are remembered for next time.
+
+> [!NOTE]
+> After changing the **resolution**, some meeting apps keep showing the old size or a frozen picture.
+> If that happens, select **OBS Virtual Camera** again in the app's video settings.
+
+### Advanced: start options
+
+You can also pass options to `start.bat`, for example in a Command Prompt opened in the project folder:
 
 ```bash
-start.bat --fit crop
+start.bat --port 47800
 ```
 
-| Option          | What it does                                                                    |
-| --------------- | ------------------------------------------------------------------------------- |
-| `--fit crop`    | Fill the whole picture (cuts the edges) instead of showing black bars           |
-| `--width 1920 --height 1080` | Full HD output (default is 1280 × 720)                             |
-| `--fps 24`      | Fewer frames per second (default 30). Helps on slow Wi-Fi                        |
-| `--quality 0.6` | Lower image quality (default 0.8). Helps on slow Wi-Fi                           |
-| `--port 47800`  | Use another network port (default 5000)                                         |
-| `--new-token`   | Make a new secret link. Old links and bookmarks stop working                    |
+| Option          | What it does                                                         |
+| --------------- | -------------------------------------------------------------------- |
+| `--port 47800`  | Use another network port (default 5000)                              |
+| `--new-token`   | Make a new secret link. Old links and bookmarks stop working         |
+| `--width 1920 --height 1080`, `--fps 24`, `--quality 0.6`, `--fit crop` | Starting values for the settings above (they override the remembered ones) |
 
 ---
 
@@ -94,7 +120,8 @@ start.bat --fit crop
 | **The phone can't open the page** | 1. Phone and PC on the same network?<br>2. Your network must be **Private** on the PC: **Settings → Network & internet → Wi-Fi or Ethernet → your network → Network profile type → Private**. Do this only for your home network.<br>3. Allow Python in **Windows Security → Firewall & network protection → Allow an app through firewall** (tick **Private**). |
 | **"Access denied" on the phone** | The link changed. Scan the new QR code. |
 | **The meeting shows "Waiting for phone..."** | The page on the phone is closed, in the background, or the screen is off. |
-| **The picture lags** | Try `start.bat --quality 0.6 --fps 24`, or move closer to the router. |
+| **The picture lags** | In **Settings (⚙)**, lower the frame rate to 24 or the image quality, or move closer to the router. |
+| **Stretched or frozen picture after changing resolution** | Select **OBS Virtual Camera** again in your meeting app. |
 | **Something else broke** | Delete the `.venv` folder and run `start.bat` again. It reinstalls everything. |
 
 ---
