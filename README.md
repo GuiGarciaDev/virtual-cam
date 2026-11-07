@@ -13,6 +13,11 @@
 
 ---
 
+<img width="1919" height="1031" alt="image" src="https://github.com/user-attachments/assets/c50ae100-f267-44f3-9623-370ce367ee71" />
+<img width="322" height="700" alt="image" src="https://github.com/user-attachments/assets/7600cac6-d1b6-4400-957a-9c17f95a3500" />
+
+
+
 ## What you need
 
 - A **Windows 10 or 11** PC
