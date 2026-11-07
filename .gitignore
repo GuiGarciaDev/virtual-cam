@@ -46,3 +46,6 @@ desktop.ini
 # Logs
 # --------------------------------------------------------------------------
 *.log
+
+# Camera Bridge data: personal CA private key, access token, QR code
+camera_bridge_data/

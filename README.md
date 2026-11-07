@@ -1,187 +1,129 @@
 <h1 align="center">📷 Camera Bridge</h1>
 
 <p align="center">
-  <strong>Turn your Android phone into a Windows webcam — no app install required.</strong>
+  <strong>Use your Android phone as a webcam for your Windows PC, over Wi-Fi.</strong><br>
+  No app on the phone. No USB cable.
 </p>
 
 <p align="center">
-  <img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-3776ab?logo=python&logoColor=white" />
-  <img alt="Flask" src="https://img.shields.io/badge/Flask-SocketIO-000?logo=flask&logoColor=white" />
+  <img alt="Windows" src="https://img.shields.io/badge/Windows-10%20%2F%2011-0078D4?logo=windows&logoColor=white" />
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.10–3.14-3776ab?logo=python&logoColor=white" />
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
-  <img alt="Platform" src="https://img.shields.io/badge/Platform-Windows-0078D4?logo=windows&logoColor=white" />
 </p>
 
 ---
 
-## ✨ What Is This?
+## What you need
 
-**Camera Bridge** is a lightweight Python script that streams your Android phone's camera directly to a Windows virtual webcam — all through the browser. No companion app needed on the phone.
-
-Just run the script on your PC, open a URL on your phone, and your phone camera instantly becomes available as a webcam in **Zoom, Discord, Google Meet, OBS**, or any other application that accepts a camera input.
-
-### How It Works
-
-```
-📱 Phone Browser ─── WebSocket (JPEG frames) ───▶ 🖥️ Python Server ───▶ 🎥 Virtual Webcam
-        ↑                                                ↑
-   getUserMedia API                              OpenCV + pyvirtualcam
-   (HTTPS required)                              (decodes & forwards)
-```
-
-1. The phone opens an HTTPS page served by the Python script
-2. The browser captures camera frames using the `getUserMedia` API
-3. Frames are sent as Base64-encoded JPEG via **Socket.IO** (WebSocket)
-4. The server decodes each frame with **OpenCV**, resizes it, and pushes it to a **virtual camera** device on Windows
+- A **Windows 10 or 11** PC
+- An **Android phone** with **Chrome**, on the **same network** as the PC
+- **[Python 3.14](https://www.python.org/downloads/)** (any version from 3.10 to 3.14 works)
+- **[OBS Studio](https://obsproject.com)**. You don't need to open it; it just provides the "OBS Virtual Camera" that Zoom, Teams, Meet and Discord can use.
 
 ---
 
-## 🚀 Quick Start
+## Install (once)
 
-### Prerequisites
+1. Install **Python** and **OBS Studio** (links above). Default options are fine.
+2. Download this project: click **Code → Download ZIP** on GitHub and unzip it, or run:
+   ```bash
+   git clone https://github.com/GuiGarciaDev/virtual-cam.git
+   ```
+3. Open the folder and **double-click `start.bat`**.
 
-| Requirement               | Purpose                                                                                                                                 |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **Python 3.10+**          | Runtime                                                                                                                                 |
-| **Virtual camera driver** | [Unity Capture](https://github.com/schellingb/UnityCapture) **or** [OBS Studio](https://obsproject.com) (ships with OBS Virtual Camera) |
-| **Android phone**         | On the same Wi-Fi / LAN as your PC                                                                                                      |
+The first time takes about a minute while it installs what it needs. After that it starts right away.
 
-### 1. Clone the repository
+If Windows asks whether to allow **Python** on the network, tick **Private networks** only and click **Allow**.
+
+---
+
+## Use it
+
+Every time you want to use your phone as a webcam:
+
+1. **Double-click `start.bat`.** A window opens with a **QR code**.
+2. **Scan the QR code** with your phone's camera and open the link in Chrome.
+3. **Allow camera access** on the phone. You'll see a preview and **Connected to PC**.
+4. In **Zoom / Teams / Meet / Discord**, choose **OBS Virtual Camera** as your camera.
+5. When you're done, **close the window** on the PC.
+
+**Tips**
+- Keep the Camera Bridge page **open and in front** on the phone during the call. The page keeps the screen on.
+- Use **Flip camera** to switch between the back and front camera.
+- **Bookmark the page** on your phone: the link stays the same every time, so next time you can skip the QR code.
+
+### First time on a phone: the security warning
+
+The first time, Chrome shows **"Your connection is not private"**. That's expected, because the page runs on your own PC.
+
+- Tap **Advanced → Proceed** to continue.
+- To make the warning go away for good, tap **Remove the certificate warning** at the bottom of the page and follow the steps there (download a small certificate and install it in your phone's settings).
+
+---
+
+## Settings (optional)
+
+Add options after `start.bat`, for example in a Command Prompt opened in the project folder:
 
 ```bash
-git clone https://github.com/<your-username>/camera-bridge.git
-cd camera-bridge
+start.bat --fit crop
 ```
 
-### 2. Create a virtual environment (recommended)
-
-```bash
-python -m venv .venv
-
-# Windows
-.venv\Scripts\activate
-
-# Linux / macOS (if ever ported)
-source .venv/bin/activate
-```
-
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Run the server
-
-```bash
-python camera_bridge.py                # defaults: 1280×720 @ 30 FPS, port 5000
-python camera_bridge.py --help         # see all options
-```
-
-The script will:
-
-- Open the virtual camera device
-- Auto-generate a self-signed SSL certificate (first run only)
-- Start an HTTPS server and print the URL to open on your phone
-
-### 5. Open on your phone
-
-Navigate to the URL shown in the terminal (e.g. `https://192.168.1.42:5000`).
-
-> [!NOTE]
-> Your phone's browser will warn you about the self-signed certificate.
-> Tap **Advanced → Proceed** — this is safe since the certificate is local and only used on your LAN.
-
-Once the page loads, your phone camera feed will appear as a regular webcam on Windows! 🎉
+| Option          | What it does                                                                    |
+| --------------- | ------------------------------------------------------------------------------- |
+| `--fit crop`    | Fill the whole picture (cuts the edges) instead of showing black bars           |
+| `--width 1920 --height 1080` | Full HD output (default is 1280 × 720)                             |
+| `--fps 24`      | Fewer frames per second (default 30). Helps on slow Wi-Fi                        |
+| `--quality 0.6` | Lower image quality (default 0.8). Helps on slow Wi-Fi                           |
+| `--port 47800`  | Use another network port (default 5000)                                         |
+| `--new-token`   | Make a new secret link. Old links and bookmarks stop working                    |
 
 ---
 
-## ⚙️ Configuration
+## Problems?
 
-All settings can be customised via **command-line arguments**:
-
-| Flag         | Default | Description                       |
-| ------------ | ------- | --------------------------------- |
-| `--width W`  | `1280`  | Virtual camera output width (px)  |
-| `--height H` | `720`   | Virtual camera output height (px) |
-| `--fps N`    | `30`    | Target frames per second          |
-| `--port P`   | `5000`  | HTTP/HTTPS server port            |
-| `--no-ssl`   | off     | Disable HTTPS (plain HTTP mode)   |
-
-### Examples
-
-```bash
-# 1080p at 60 FPS on port 8080
-python camera_bridge.py --width 1920 --height 1080 --fps 60 --port 8080
-
-# 480p, default FPS, no SSL
-python camera_bridge.py --width 854 --height 480 --no-ssl
-```
+| Problem | What to do |
+| ------- | ---------- |
+| **"Python 3.10 - 3.14 was not found"** | Install [Python 3.14](https://www.python.org/downloads/), then run `start.bat` again. |
+| **"Could not open a virtual camera"** | Install [OBS Studio](https://obsproject.com). If OBS is open with **Start Virtual Camera** on, stop it. |
+| **The phone can't open the page** | 1. Phone and PC on the same network?<br>2. Your network must be **Private** on the PC: **Settings → Network & internet → Wi-Fi or Ethernet → your network → Network profile type → Private**. Do this only for your home network.<br>3. Allow Python in **Windows Security → Firewall & network protection → Allow an app through firewall** (tick **Private**). |
+| **"Access denied" on the phone** | The link changed. Scan the new QR code. |
+| **The meeting shows "Waiting for phone..."** | The page on the phone is closed, in the background, or the screen is off. |
+| **The picture lags** | Try `start.bat --quality 0.6 --fps 24`, or move closer to the router. |
+| **Something else broke** | Delete the `.venv` folder and run `start.bat` again. It reinstalls everything. |
 
 ---
 
-## 🔒 SSL & HTTPS
+## Is it safe?
 
-Modern mobile browsers require a **secure context** (HTTPS) to access the camera via `getUserMedia`. Camera Bridge handles this automatically:
+- **Encrypted:** the video travels over HTTPS, like a banking website.
+- **Secret link:** the QR code contains a secret code. Without it, other devices on your network can't open the page or send video. Keep the link to yourself.
+- **One phone at a time:** if another phone connects with the link, the first one is disconnected.
+- **Not on the internet:** only devices on your own network can reach it, and only while `start.bat` is running.
+- **The certificate** you can install on the phone only works for home-network addresses (like 192.168.x.x), so it can't be used to fake real websites. You can remove it any time in the phone's settings under **Encryption & credentials → User credentials**.
 
-- On first run, a **self-signed SSL certificate** is generated and saved next to the script
-- The certificate is reused on subsequent runs
-- Certificate generation uses either `openssl` (if available) or the Python `cryptography` library
-
-### Prefer plain HTTP?
-
-Pass `--no-ssl` and configure Chrome on Android:
-
-1. Go to `chrome://flags`
-2. Search for **"Insecure origins treated as secure"**
-3. Add `http://<YOUR_PC_IP>:5000` and enable the flag
-4. Relaunch Chrome
+Your secret link and certificate are stored in the `camera_bridge_data` folder on your PC. They're never uploaded to GitHub.
 
 ---
 
-## 📁 Project Structure
+## How it works
 
 ```
-camera-bridge/
-├── camera_bridge.py      # Main application (server + embedded frontend)
-├── requirements.txt      # Python dependencies
-├── .gitignore            # Git ignore rules
-├── LICENSE               # MIT License
-└── README.md             # This file
+📱 Chrome on the phone ──(encrypted Wi-Fi)──▶ 🖥️ camera_bridge.py ──▶ 🎥 OBS Virtual Camera ──▶ Zoom, Teams, Meet...
 ```
 
-> [!TIP]
-> The HTML/CSS/JS frontend is embedded directly inside `camera_bridge.py` — it's a single-file application with zero external build steps.
+The phone page captures the camera and sends JPEG images to the PC. The script fits each image to the webcam size
+without stretching it and passes it to the virtual camera. If the Wi-Fi gets slow, frames are skipped so the
+video never falls behind.
+
+| File               | Purpose                                         |
+| ------------------ | ----------------------------------------------- |
+| `start.bat`        | Double-click to set up and start everything     |
+| `camera_bridge.py` | The app (PC server and the phone page)          |
+| `requirements.txt` | Python packages it needs                        |
 
 ---
 
-## 🛠️ Supported Virtual Camera Backends
+## License
 
-The script tries the following backends in order:
-
-1. **Unity Capture** — lightweight, standalone virtual camera driver
-2. **OBS Virtual Camera** — included with OBS Studio
-3. **Default** — falls back to whatever `pyvirtualcam` auto-detects
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
----
-
-<p align="center">
-  Made with ❤️ for everyone tired of buying overpriced webcams.
-</p>
+MIT. See [LICENSE](LICENSE).

@@ -1,7 +1,12 @@
-flask
-flask-socketio
-pyvirtualcam
+# Python 3.10 – 3.14 (pyvirtualcam has no Windows build for 3.15 yet)
+flask>=3.0
+flask-sock>=0.7
+simple-websocket>=1.0
+pyvirtualcam>=0.11
 opencv-python
 numpy
-simple-websocket
-cryptography
+cryptography>=42
+segno>=1.6
+
+# Optional: faster JPEG decoding
+# simplejpeg
